@@ -26,6 +26,11 @@ public class Line extends Figure {
     }
 
     @Override
+    public boolean isContainedIn(Rectangle rectangle) {
+        return false; // TODO
+    }
+
+    @Override
     public void move(double deltaX, double deltaY) {
         from.move(deltaX, deltaY);
         to.move(deltaX, deltaY);

@@ -32,6 +32,11 @@ public class Ellipse extends Figure {
     }
 
     @Override
+    public boolean isContainedIn(Rectangle rectangle) {
+        return false; // TODO
+    }
+
+    @Override
     public void move(double deltaX, double deltaY) {
         center.move(deltaX, deltaY);
     }

@@ -11,19 +11,24 @@ public class Point {
     public double getX() {
         return x;
     }
+
     public double getY() {
         return y;
     }
 
-    /** Calculates the square of the distance between this point and another point. */
+    /**
+     * Calculates the square of the distance between this point and another point.
+     */
     public double distanceSquaredTo(Point other) {
         double dx = x - other.x;
         double dy = y - other.y;
         return x * x + y * y;
     }
 
-    /** Calculates the distance between this point and another point. */
-    public double distanceTo(Point other){
+    /**
+     * Calculates the distance between this point and another point.
+     */
+    public double distanceTo(Point other) {
         return Math.sqrt(distanceSquaredTo(other));
     }
 
