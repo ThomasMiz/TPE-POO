@@ -5,12 +5,12 @@ import backend.model.Circle;
 import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -18,44 +18,74 @@ import javafx.scene.paint.Color;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	CanvasState canvasState;
+	private CanvasState canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color fillColor = Color.YELLOW;
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Color lineColor = Color.BLACK;
+	private final Color fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
-	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
+	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
+	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
+	private final ToggleButton circleButton = new ToggleButton("Círculo");
+	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
+	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
+	private final ToggleButton lineButton = new ToggleButton("Línea");
+	private final ToggleButton deleteButton = new ToggleButton("Borrar");
+	private final ToggleButton toBottomButton = new ToggleButton("Al Fondo");
+	private final ToggleButton toFrontButton = new ToggleButton("Al Frente");
 
 	// Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
 	// Seleccionar una figura
-	Figure selectedFigure;
+	private Figure selectedFigure;
 
 	// StatusBar
-	StatusPane statusPane;
+	private StatusPane statusPane;
+
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, lineButton, deleteButton, toBottomButton, toFrontButton};
+
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+
+		Slider slider = new Slider(1, 50, 1);
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+
+		Label borderLabel = new Label();
+		Label fillLabel = new Label();
+
+		borderLabel.textProperty().bind(
+				Bindings.format(
+						"Borde:\t%.2f",
+						slider.valueProperty()
+				)
+		);
+
+		fillLabel.textProperty().bind(Bindings.format("Relleno: "));
+
+		ColorPicker borderColorPicker = new ColorPicker(lineColor);
+		ColorPicker fillColorPicker = new ColorPicker(fillColor);
+
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
+		buttonsBox.getChildren().addAll(borderLabel, slider, borderColorPicker, fillLabel, fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
+
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
