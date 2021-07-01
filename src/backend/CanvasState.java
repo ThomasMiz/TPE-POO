@@ -5,6 +5,7 @@ import backend.model.Point;
 import backend.model.Rectangle;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class CanvasState implements Iterable<Figure> {
 
@@ -17,49 +18,79 @@ public class CanvasState implements Iterable<Figure> {
      */
     private final List<Figure> list = new ArrayList<>();
 
+    private Consumer<CanvasState> canvasChangedCallback = null;
+
     public void addFigure(Figure figure) {
         list.add(figure);
+        raiseOnCanvasChanged();
     }
 
     public boolean removeFigures(Collection<Figure> figures) {
-        return list.removeAll(figures);
+        boolean r = list.removeAll(figures);
+        raiseOnCanvasChanged();
+        return r;
     }
 
     public void sendToTop(Collection<Figure> figures) {
         // TODO
+        raiseOnCanvasChanged();
     }
 
     public void sendToBottom(Collection<Figure> figures) {
         // TODO
+        raiseOnCanvasChanged();
     }
 
     /**
      * Gets the Figure with the lowest depth that contains the given point, or null if none was found.
      */
-    public Figure getFigureOnTopOf(Point point) {
-        return null; // TODO
+    public Figure getFigureAt(Point point) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            Figure f = list.get(i);
+            if (f.contains(point))
+                return f;
+        }
+
+        return null;
     }
 
     /**
-     * Adds all the figures that intersect a given rectangle to the specified collection.
-     * Returns whether any figure was added to the collection.
+     * Adds all the figures that are fully contained within a given rectangle to the specified collection.
+     * Returns the amount of figures that were added to the collection.
      */
-    public boolean getFiguresOnRectangle(Rectangle rectangle, Collection<Figure> result) {
-        return false; // TODO
+    public int getFiguresOnRectangle(Rectangle rectangle, Collection<Figure> result) {
+        int count = 0;
+        for (Figure f : list) {
+            if (f.isContainedIn(rectangle))
+            {
+                result.add(f);
+                count++;
+            }
+        }
+        return count;
     }
 
-    /**
-     * Returns an iterator through the Figures in this CanvasState in ascending depth order (from top to bottom).
-     */
-    public Iterator<Figure> iterator() {
-        return new ListInvertedIterator<>(list);
+    private void raiseOnCanvasChanged() {
+        if (canvasChangedCallback != null)
+            canvasChangedCallback.accept(this);
+    }
+
+    public void setOnCanvasChanged(Consumer<CanvasState> callback) {
+        canvasChangedCallback = callback;
     }
 
     /**
      * Returns an iterator through the Figures in this CanvasState in descending depth order (from bottom to top).
      */
-    public Iterator<Figure> descendingDepthIterator() {
+    public Iterator<Figure> iterator() {
         return list.iterator();
+    }
+
+    /**
+     * Returns an iterator through the Figures in this CanvasState in ascending depth order (from top to bottom).
+     */
+    public Iterator<Figure> ascendingDepthIterator() {
+        return new ListInvertedIterator<>(list);
     }
 
     private static class ListInvertedIterator<T> implements Iterator<T> {
