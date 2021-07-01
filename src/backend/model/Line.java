@@ -27,7 +27,7 @@ public class Line extends Figure {
 
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
-        return false; // TODO
+        return rectangle.contains(from) && rectangle.contains(to);
     }
 
     @Override

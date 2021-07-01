@@ -31,9 +31,17 @@ public class Rectangle extends Figure {
                 topLeft.getY() <= point.getY() && point.getY() <= bottomRight.getY();
     }
 
+    /**
+     * Returns true if the given rectangle is fully contained within this rectangle.
+     */
+    public boolean contains(Rectangle other) {
+        return topLeft.getX() <= other.topLeft.getX() && other.bottomRight.getX() <= bottomRight.getX()
+                && topLeft.getY() <= other.topLeft.getY() && other.bottomRight.getY() <= bottomRight.getY();
+    }
+
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
-        return false; // TODO
+        return rectangle.contains(this);
     }
 
     @Override

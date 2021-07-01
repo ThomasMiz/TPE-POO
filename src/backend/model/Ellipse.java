@@ -33,7 +33,10 @@ public class Ellipse extends Figure {
 
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
-        return false; // TODO
+        Point tl = rectangle.getTopLeft();
+        Point br = rectangle.getBottomRight();
+        return tl.getX() <= center.getX() - radiusX && center.getX() + radiusX <= br.getX()
+                && tl.getY() <= center.getY() - radiusY && center.getY() + radiusY <= br.getY();
     }
 
     @Override
