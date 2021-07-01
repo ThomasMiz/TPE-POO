@@ -11,9 +11,4 @@ public abstract class Figure {
      * Returns whether this Figure is fully contained within a given Rectangle.
      */
     public abstract boolean isContainedIn(Rectangle rectangle);
-
-    /**
-     * Moves this figure by the specified delta.
-     */
-    public abstract void move(double deltaX, double deltaY);
 }

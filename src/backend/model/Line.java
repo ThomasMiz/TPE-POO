@@ -1,7 +1,7 @@
 package backend.model;
 
 public class Line extends Figure {
-    private final Point from, to;
+    protected final Point from, to;
 
     public Line(Point from, Point to) {
         this.from = from;
@@ -28,12 +28,6 @@ public class Line extends Figure {
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
         return rectangle.contains(from) && rectangle.contains(to);
-    }
-
-    @Override
-    public void move(double deltaX, double deltaY) {
-        from.move(deltaX, deltaY);
-        to.move(deltaX, deltaY);
     }
 
     @Override

@@ -5,7 +5,6 @@ import backend.model.Point;
 import backend.model.Rectangle;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class CanvasState implements Iterable<Figure> {
 
@@ -18,27 +17,20 @@ public class CanvasState implements Iterable<Figure> {
      */
     private final List<Figure> list = new ArrayList<>();
 
-    private Consumer<CanvasState> canvasChangedCallback = null;
-
     public void addFigure(Figure figure) {
         list.add(figure);
-        raiseOnCanvasChanged();
     }
 
     public boolean removeFigures(Collection<Figure> figures) {
-        boolean r = list.removeAll(figures);
-        raiseOnCanvasChanged();
-        return r;
+        return list.removeAll(figures);
     }
 
     public void sendToTop(Collection<Figure> figures) {
         // TODO
-        raiseOnCanvasChanged();
     }
 
     public void sendToBottom(Collection<Figure> figures) {
         // TODO
-        raiseOnCanvasChanged();
     }
 
     /**
@@ -68,15 +60,6 @@ public class CanvasState implements Iterable<Figure> {
             }
         }
         return count;
-    }
-
-    private void raiseOnCanvasChanged() {
-        if (canvasChangedCallback != null)
-            canvasChangedCallback.accept(this);
-    }
-
-    public void setOnCanvasChanged(Consumer<CanvasState> callback) {
-        canvasChangedCallback = callback;
     }
 
     /**

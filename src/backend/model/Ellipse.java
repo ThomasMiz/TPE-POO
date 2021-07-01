@@ -1,13 +1,13 @@
 package backend.model;
 
 public class Ellipse extends Figure {
-    private final Point center;
+    protected final Point center;
     private final double radiusX, radiusY;
 
     public Ellipse(Point center, double radiusX, double radiusY) {
         if (radiusX <= 0) throw new IllegalArgumentException("radiusX must be greater than 0");
         if (radiusY <= 0) throw new IllegalArgumentException("radiusY must be greater than 0");
-        this.center = new Point(center.getX(), center.getY());
+        this.center = center;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
     }
@@ -37,11 +37,6 @@ public class Ellipse extends Figure {
         Point br = rectangle.getBottomRight();
         return tl.getX() <= center.getX() - radiusX && center.getX() + radiusX <= br.getX()
                 && tl.getY() <= center.getY() - radiusY && center.getY() + radiusY <= br.getY();
-    }
-
-    @Override
-    public void move(double deltaX, double deltaY) {
-        center.move(deltaX, deltaY);
     }
 
     @Override
