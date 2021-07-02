@@ -3,7 +3,7 @@ package backend.model;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Ellipse extends Figure {
-    protected final Point center;
+    private final Point center;
     private final double radiusX, radiusY;
 
     public Ellipse(Point center, double radiusX, double radiusY) {
@@ -45,7 +45,9 @@ public class Ellipse extends Figure {
     @Override
     public void draw(GraphicsContext gc) {
         super.draw(gc);
-        // TODO
+        gc.setFill(getFillColor());
+        gc.fillOval(center.getX() - radiusX, center.getY() - radiusY, radiusX*2, radiusY*2);
+        gc.strokeOval(center.getX() - radiusX, center.getY() - radiusY, radiusX*2, radiusY*2);
     }
 
     @Override

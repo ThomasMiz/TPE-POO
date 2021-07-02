@@ -36,7 +36,7 @@ public class Line extends Figure {
     @Override
     public void draw(GraphicsContext gc) {
         super.draw(gc);
-        // TODO
+        gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
     }
 
     @Override

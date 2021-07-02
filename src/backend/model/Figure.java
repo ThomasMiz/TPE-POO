@@ -1,11 +1,12 @@
 package backend.model;
 
 import backend.Colorable;
+import backend.Drawable;
 import backend.Movable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class Figure implements Movable, Colorable {
+public abstract class Figure implements Movable, Colorable, Drawable {
 
     private final Point[] points;
 
@@ -45,13 +46,16 @@ public abstract class Figure implements Movable, Colorable {
     /**
      * Moves this figure by the specified amount.
      */
+    @Override
     public void move(double deltaX, double deltaY) {
         for (Point p : points)
             p.move(deltaX, deltaY);
     }
 
+    @Override
     public void draw(GraphicsContext gc) {
-        // TODO
+        gc.setStroke(borderColor);
+        gc.setLineWidth(borderSize);
     }
 
     /**
