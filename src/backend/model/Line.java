@@ -1,9 +1,10 @@
 package backend.model;
 
 public class Line extends Figure {
-    protected final Point from, to;
+    private final Point from, to;
 
     public Line(Point from, Point to) {
+        super(new Point[]{from, to});
         this.from = from;
         this.to = to;
     }

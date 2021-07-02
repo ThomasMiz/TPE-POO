@@ -1,4 +1,4 @@
-package backend.model.movables;
+package backend;
 
 public interface Movable {
 

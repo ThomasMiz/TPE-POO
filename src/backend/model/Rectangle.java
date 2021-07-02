@@ -2,9 +2,10 @@ package backend.model;
 
 public class Rectangle extends Figure {
 
-    protected final Point topLeft, bottomRight;
+    private final Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
+        super(new Point[]{topLeft, bottomRight});
         if (topLeft.getX() >= bottomRight.getX())
             throw new IllegalArgumentException("topLeft must be on the left of bottomRight");
         if (topLeft.getY() >= bottomRight.getY())
