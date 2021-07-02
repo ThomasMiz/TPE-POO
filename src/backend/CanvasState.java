@@ -26,11 +26,46 @@ public class CanvasState implements Iterable<Figure> {
     }
 
     public void sendToTop(Collection<Figure> figures) {
-        // TODO
+        // We already have the figures in the collection, but we make a list so we send them to the top
+        // but retain the order these figures had before.
+        List<Figure> toTopList = new ArrayList<>(figures.size());
+
+        // We iterate upwards through the list, removing the figures that need to be sent to the top and
+        // adding them to the toTopList list, leaving leftover space at the end of the list.
+        int placeIndex = 0;
+        for (int searchIndex = 0; searchIndex <= list.size(); searchIndex++) {
+            Figure f = list.get(searchIndex);
+            if (figures.contains(f))
+                toTopList.add(f);
+            else if (searchIndex != placeIndex)
+                list.set(placeIndex++, f);
+        }
+
+        // At this point, there are as many free spaces at the end of the list as figures in toTopList.
+        // We just need to move the figures in toTopList to these remaining spaces.
+        for(Figure f : toTopList)
+            list.set(placeIndex++, f);
     }
 
     public void sendToBottom(Collection<Figure> figures) {
-        // TODO
+        // We already have the figures in the collection, but we make a list so we send them to the bottom
+        // but retain the order these figures had before.
+        List<Figure> toBottomList = new ArrayList<>(figures.size());
+
+        // We iterate backwards through the list, checking which figures we have to remove and leaving
+        // the leftover space at the beginning of the list.
+        int placeIndex = list.size() - 1;
+        for (int searchIndex = placeIndex; searchIndex >= 0; searchIndex--) {
+            Figure f = list.get(searchIndex);
+            if (figures.contains(f))
+                toBottomList.add(f);
+            else if (searchIndex != placeIndex)
+                list.set(placeIndex--, f);
+        }
+
+        // placeIndex has not reached 0 yet, there are as many places left at the beginning of the list as
+        // figures in the toBottomList. To be done, we just have to copy the leftover figures
+        for (Figure f : toBottomList) list.set(placeIndex--, f);
     }
 
     /**
