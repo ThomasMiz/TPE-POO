@@ -2,6 +2,7 @@ package backend.model;
 
 import backend.Colorable;
 import backend.Movable;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public abstract class Figure implements Movable, Colorable {
@@ -47,6 +48,10 @@ public abstract class Figure implements Movable, Colorable {
     public void move(double deltaX, double deltaY) {
         for (Point p : points)
             p.move(deltaX, deltaY);
+    }
+
+    public void draw(GraphicsContext gc) {
+        // TODO
     }
 
     /**

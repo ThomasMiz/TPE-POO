@@ -1,5 +1,7 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class Line extends Figure {
     private final Point from, to;
 
@@ -29,6 +31,12 @@ public class Line extends Figure {
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
         return rectangle.contains(from) && rectangle.contains(to);
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        super.draw(gc);
+        // TODO
     }
 
     @Override

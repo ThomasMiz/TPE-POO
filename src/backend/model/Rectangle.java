@@ -1,5 +1,7 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class Rectangle extends Figure {
 
     private final Point topLeft, bottomRight;
@@ -47,6 +49,12 @@ public class Rectangle extends Figure {
     @Override
     public boolean isContainedIn(Rectangle rectangle) {
         return rectangle.contains(this);
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        super.draw(gc);
+        // TODO
     }
 
     @Override

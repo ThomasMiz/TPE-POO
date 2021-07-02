@@ -1,5 +1,7 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class Ellipse extends Figure {
     protected final Point center;
     private final double radiusX, radiusY;
@@ -38,6 +40,12 @@ public class Ellipse extends Figure {
         Point br = rectangle.getBottomRight();
         return tl.getX() <= center.getX() - radiusX && center.getX() + radiusX <= br.getX()
                 && tl.getY() <= center.getY() - radiusY && center.getY() + radiusY <= br.getY();
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        super.draw(gc);
+        // TODO
     }
 
     @Override
