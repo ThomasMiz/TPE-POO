@@ -13,13 +13,15 @@ public class SquareTool extends FigureTool {
 
     @Override
     public Figure createInstance(Point startPoint, Point endPoint) {
-        updatePoints(startPoint, endPoint);
-        return new Square(startPoint, new Point(endPoint.getX(), startPoint.getY() + endPoint.getX() - startPoint.getX()));
-    }
+        double dx = endPoint.getX() - startPoint.getX();
+        double dy = endPoint.getY() - startPoint.getY();
+        double size = Math.min(Math.abs(dx), Math.abs(dy));
 
-    private void updatePoints(Point startPoint, Point endPoint) {
+        Point topLeft = new Point(
+                startPoint.getX() - (dx < 0 ? size : 0),
+                startPoint.getY() - (dy < 0 ? size : 0)
+        );
 
+        return new Square(topLeft, size);
     }
 }
-
-

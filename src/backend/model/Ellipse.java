@@ -8,8 +8,8 @@ public class Ellipse extends Figure {
 
     public Ellipse(Point center, double radiusX, double radiusY) {
         super(new Point[]{center});
-        if (radiusX <= 0) throw new IllegalArgumentException("radiusX must be greater than 0");
-        if (radiusY <= 0) throw new IllegalArgumentException("radiusY must be greater than 0");
+        if (radiusX <= 0 && radiusY <= 0)
+            throw new IllegalArgumentException("Radiuses must be greater than 0");
         this.center = center;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
@@ -46,8 +46,8 @@ public class Ellipse extends Figure {
     public void draw(GraphicsContext gc) {
         super.draw(gc);
         gc.setFill(getFillColor());
-        gc.fillOval(center.getX() - radiusX, center.getY() - radiusY, radiusX*2, radiusY*2);
-        gc.strokeOval(center.getX() - radiusX, center.getY() - radiusY, radiusX*2, radiusY*2);
+        gc.fillOval(center.getX() - radiusX, center.getY() - radiusY, radiusX * 2, radiusY * 2);
+        gc.strokeOval(center.getX() - radiusX, center.getY() - radiusY, radiusX * 2, radiusY * 2);
     }
 
     @Override

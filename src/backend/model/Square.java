@@ -7,12 +7,8 @@ public class Square extends Rectangle {
      */
     public Square(Point topLeft, double size) {
         super(topLeft, new Point(topLeft.getX() + size, topLeft.getY() + size));
-    }
-
-    public Square(Point topLeft, Point bottomRight) {
-        super(topLeft, bottomRight);
-        if (bottomRight.getX() - topLeft.getX() != bottomRight.getY() - topLeft.getY())
-            throw new IllegalArgumentException("A square's points must have the same distance in both axis");
+        if (size <= 0)
+            throw new IllegalArgumentException("A Square's size must be greater than 0");
     }
 
     @Override

@@ -8,9 +8,15 @@ public class Rectangle extends Figure {
 
     public Rectangle(Point topLeft, Point bottomRight) {
         super(new Point[]{topLeft, bottomRight});
-        if (topLeft.getX() >= bottomRight.getX())
+
+        if (topLeft.getX() == bottomRight.getX())
+            throw new IllegalArgumentException("A Rectangle's width must be greater than 0");
+        if (topLeft.getY() == bottomRight.getY())
+            throw new IllegalArgumentException("A Rectangle's heigh must be greater than 0");
+
+        if (topLeft.getX() > bottomRight.getX())
             throw new IllegalArgumentException("topLeft must be on the left of bottomRight");
-        if (topLeft.getY() >= bottomRight.getY())
+        if (topLeft.getY() > bottomRight.getY())
             throw new IllegalArgumentException("topLeft must be above bottomRight");
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
@@ -62,5 +68,16 @@ public class Rectangle extends Figure {
     @Override
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
+    }
+
+    /**
+     * Creates a Rectangle from the two specified points, no matter their orientation.
+     * Exceptions will still be thrown if the rectangle specified by those points has an area of 0
+     */
+    public static Rectangle from(Point pointA, Point pointB) {
+        return new Rectangle(
+                new Point(Math.min(pointA.getX(), pointB.getX()), Math.min(pointA.getY(), pointB.getY())),
+                new Point(Math.max(pointA.getX(), pointB.getX()), Math.max(pointA.getY(), pointB.getY()))
+        );
     }
 }
