@@ -5,12 +5,11 @@ import backend.model.Figure;
 import backend.model.Line;
 import backend.model.Point;
 import frontend.PaintPane;
-import frontend.StatusPane;
 
 public class LineTool extends FigureTool{
 
-    public LineTool(PaintPane paintPane) {
-        super(paintPane);
+    public LineTool(CanvasState canvasState, PaintPane paintPane) {
+        super(canvasState, paintPane);
     }
 
     @Override

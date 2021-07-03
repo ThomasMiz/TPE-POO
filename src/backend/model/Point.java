@@ -24,7 +24,7 @@ public class Point implements Movable {
     public double distanceSquaredTo(Point other) {
         double dx = x - other.x;
         double dy = y - other.y;
-        return x * x + y * y;
+        return dx * dx + dy * dy;
     }
 
     /**
