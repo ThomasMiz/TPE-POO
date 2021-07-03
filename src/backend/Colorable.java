@@ -12,4 +12,11 @@ public interface Colorable {
 
     void setFillColor(Color color);
     Color getFillColor();
+
+    default void setColorProperties(double borderSize, Color borderColor, Color fillColor) {
+        setBorderSize(borderSize);
+        setBorderColor(borderColor);
+        setFillColor(fillColor);
+    }
+
 }
