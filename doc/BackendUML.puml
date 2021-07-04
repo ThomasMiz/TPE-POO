@@ -103,6 +103,7 @@ class Point{
 +double distanceSquaredTo(Point other)
 +double distanceTo(Point other)
 +void move(double deltaX, double deltaY)
++boolean equals()
 +String toString()
 }
 
@@ -137,5 +138,9 @@ class Line extends Figure
 
 note top of CanvasState
 This class implements of Iterable<T>
+end note
+
+note left of Point
+This class implements of Movable
 end note
 @enduml

@@ -45,7 +45,7 @@ class PaintPane{
 -final Button deleteButton
 -final Button toBottomButton
 -final Button toTopButton
--final Slider borderSlider
+-final Slider borderSizeSlider
 -final ColorPicker borderColorPicker
 -final ColorPicker fillColorPicker
 
@@ -59,6 +59,7 @@ class PaintPane{
 +Color getBorderColor()
 +double getBorderSize()
 +StatusPane getStatusPane()
++void reset()
 -void onMousePressed(MouseEvent event)
 -void onMouseRelease(MouseEvent event)
 -void onMouseMoved(MouseEvent event)
@@ -132,7 +133,7 @@ This class extends of BorderPane
 end note
 
 class PaintPane
-note right: This class extends of BorderPane
+note right: This class extends of HBox
 
 
 
