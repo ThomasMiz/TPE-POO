@@ -75,6 +75,10 @@ public class CanvasState implements Iterable<Figure> {
             list.set(placeIndex--, f);
     }
 
+    public void clear() {
+        list.clear();
+    }
+
     /**
      * Gets the Figure with the lowest depth that contains the given point, or null if none was found.
      */

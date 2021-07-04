@@ -6,7 +6,6 @@ import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.tools.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -20,7 +19,7 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
-public class PaintPane extends HBox{
+public class PaintPane extends HBox {
 
 	private static final Color SELECTED_FIGURE_BORDER_COLOR = new Color(1, 0, 0, 1);
 
@@ -70,7 +69,7 @@ public class PaintPane extends HBox{
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		CanvasPane canvasPane = new CanvasPane(600,800);
+		CanvasPane canvasPane = new CanvasPane(600, 800);
 		this.canvas = canvasPane.getCanvas();
 		this.gc = canvas.getGraphicsContext2D();
 
@@ -147,7 +146,7 @@ public class PaintPane extends HBox{
 		fillColorPicker.valueProperty().addListener(this::onFillColorChanged);
 	}
 
-	private void onWindowSizeChanged(ObservableValue<? extends Number> observableValue, Number number, Number t1){
+	private void onWindowSizeChanged(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		redrawCanvas();
 	}
 
@@ -235,7 +234,7 @@ public class PaintPane extends HBox{
 	}
 
 	private void onMouseMoved(MouseEvent event) {
-		if(selectedFigures.isEmpty()) {
+		if (selectedFigures.isEmpty()) {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			Figure topFigure = canvasState.getFigureAt(eventPoint); // Only the information from the front figure is displayed
 			statusPane.updateStatus(topFigure == null ? eventPoint.toString() : topFigure.toString());
@@ -297,6 +296,21 @@ public class PaintPane extends HBox{
 			gc.setFill(figure.getFillColor());
 			figure.draw(gc);
 		}
+	}
+
+	public void reset() {
+		// We clear the figures
+		selectedFigures.clear();
+		canvasState.clear();
+
+		// We reset the UI. Since selectedFigures is empty, setting the pickers (and slider) will
+		// automatically set the borderColor, borderSize and fillColor variables (in the callbacks)
+		figureAndSelectionToolsGroup.selectToggle(null);
+		borderColorPicker.setValue(DEFAULT_FIGURE_BORDER_COLOR);
+		fillColorPicker.setValue(DEFAULT_FIGURE_FILL_COLOR);
+		borderSizeSlider.setValue(DEFAULT_FIGURE_BORDER_SIZE);
+
+		redrawCanvas();
 	}
 
 	public Color getFillColor() {
