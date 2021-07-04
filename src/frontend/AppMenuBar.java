@@ -12,11 +12,11 @@ public class AppMenuBar extends MenuBar {
         this.paintPane = paintPane;
 
         Menu file = new Menu("Archivo");
-        MenuItem exitMenuItem = new MenuItem("Salir");
-        exitMenuItem.setOnAction(this::onExitClicked);
         MenuItem clearMenuItem = new MenuItem("Borrar todo");
         clearMenuItem.setOnAction(this::onClearClicked);
-        file.getItems().addAll(exitMenuItem, clearMenuItem);
+        MenuItem exitMenuItem = new MenuItem("Salir");
+        exitMenuItem.setOnAction(this::onExitClicked);
+        file.getItems().addAll(clearMenuItem, exitMenuItem);
 
         Menu help = new Menu("Ayuda");
         MenuItem aboutMenuItem = new MenuItem("Acerca De");
@@ -31,8 +31,15 @@ public class AppMenuBar extends MenuBar {
         alert.setTitle("Borrar todo");
         alert.setHeaderText("Eliminar todas las figuras");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.YES)
-            paintPane.reset();
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Por favor no lo borres, Franco! Tu dibujo es hermoso :'(", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("Borrar todo??????");
+            alert.setHeaderText("No lo hagas!!!");
+            result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.YES)
+                paintPane.reset();
+
+        }
     }
 
     private void onExitClicked(ActionEvent event) {
