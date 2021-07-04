@@ -11,6 +11,6 @@ public class Square extends Rectangle {
 
     @Override
     public String toString() {
-        return String.format("Square [topLeft: %s, size: %.2f]", getTopLeft(), width());
+        return String.format("Cuadrado [ %s, %s ]", getTopLeft(), getBottomRight());
     }
 }
