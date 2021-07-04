@@ -225,12 +225,8 @@ public class PaintPane extends HBox {
 			}
 
 			onSelectionChanged();
-		} else {
-			Object buttonData = selectedButton.getUserData();
-			if (buttonData instanceof FigureTool) {
-				((FigureTool) buttonData).createFigure(startPoint, releasePoint);
-			}
-		}
+		} else
+			((FigureTool) selectedButton.getUserData()).createFigure(startPoint, releasePoint);
 	}
 
 	private void onMouseMoved(MouseEvent event) {
