@@ -114,32 +114,4 @@ public class CanvasState implements Iterable<Figure> {
     public Iterator<Figure> iterator() {
         return list.iterator();
     }
-
-    /**
-     * Returns an iterator through the Figures in this CanvasState in ascending depth order (from top to bottom).
-     */
-    public Iterator<Figure> ascendingDepthIterator() {
-        return new ListInvertedIterator<>(list);
-    }
-
-    private static class ListInvertedIterator<T> implements Iterator<T> {
-        private final List<T> list;
-        private int index;
-
-        public ListInvertedIterator(List<T> list) {
-            this.list = list;
-            index = list.size() - 1;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index >= 0 && index < list.size();
-        }
-
-        @Override
-        public T next() {
-            if (!hasNext()) throw new NoSuchElementException();
-            return list.get(index--);
-        }
-    }
 }

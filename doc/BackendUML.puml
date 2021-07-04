@@ -19,7 +19,7 @@ Drawable -[hidden] Colorable
 Colorable -[hidden] Movable
 
 abstract class Figure{
--final Point[] points
+-Point[] points
 -double borderSize
 -Color borderColor
 -Color fillColor
@@ -38,7 +38,7 @@ class Figure implements Movable
 Figure *-up- Point
 
 class CanvasState{
--final List<Figure> list
+-List<Figure> list
 +void addFigure(Figure figure)
 +boolean removeFigures(Collection<Figure> figures)
 +void sendToTop(Collection<Figure> figures)
@@ -46,21 +46,10 @@ class CanvasState{
 +Figure getFigureAt(Point point)
 +int getFiguresOnRectangle(Rectangle rectangle, Collection<Figure> result)
 +Iterator<Figure> iterator()
-+Iterator<Figure> ascendingDepthIterator()
++void clear()
 }
 
-CanvasState *-- Figure
-
-class ListInvertedIterator<T>{
--final List<T> list
--int index
-
-+ListInvertedIterator(List<T> list)
-+boolean hasNext()
-+T next()
-}
-
-CanvasState +--  ListInvertedIterator
+CanvasState *-left- Figure
 
 class Circle{
 +Circle(Point center, double radius)
@@ -69,9 +58,9 @@ class Circle{
 }
 
 class Ellipse{
--final Point center
--final double radiusX
--final double radiusY
+-Point center
+-double radiusX
+-double radiusY
 
 +Ellipse(Point center, double radiusX, double radiusY)
 +Point getCenter()
@@ -84,8 +73,8 @@ class Ellipse{
 }
 
 class Line{
--final Point from
--final Point to
+-Point from
+-Point to
 
 +Line(Point from, Point to)
 +Point getFrom()
@@ -110,8 +99,8 @@ class Point{
 class Point implements Movable
 
 class Rectangle{
--final Point topLeft
--final Point bottomRight
+-Point topLeft
+-Point bottomRight
 
 +Rectangle(Point topLeft, Point bottomRight)
 +Point getTopLeft()
@@ -137,10 +126,6 @@ class Square extends Figure
 class Line extends Figure
 
 note top of CanvasState
-This class implements of Iterable<T>
-end note
-
-note left of Point
-This class implements of Movable
+This class implements of Iterable<Figure>
 end note
 @enduml

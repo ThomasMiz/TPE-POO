@@ -7,7 +7,7 @@ public class CanvasPane extends Pane {
 
     private final Canvas canvas;
 
-    CanvasPane(double width, double height) {
+    public CanvasPane(double width, double height) {
         setWidth(width);
         setHeight(height);
         canvas = new Canvas(width, height);

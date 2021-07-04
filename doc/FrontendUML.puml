@@ -14,44 +14,50 @@ class MainFrame{
 }
 
 class StatusPane{
--final Label statusLabel
+-Label statusLabel
 +StatusPane()
 +void updateStatus(String text)
 }
 
-class PaintPane{
--{static} final Color SELECTED_FIGURE_BORDER_COLOR
--{static} final Color DEFAULT_FIGURE_FILL_COLOR
--{static} final Color DEFAULT_FIGURE_BORDER_COLOR
--{static} final double DEFAULT_FIGURE_BORDER_SIZE
--{static} final double MIN_FIGURE_BORDER_SIZE
--{static} final double MAX_FIGURE_BORDER_sIZE
+class CanvasPane{
+-Canvas canvas
++CanvasPane(double width, double height)
++Canvas getCanvas()
+}
 
--final CanvasState canvasState;
--final Canvas canvas
--final GraphicsContext gc
+class PaintPane{
+-{static} Color SELECTED_FIGURE_BORDER_COLOR
+-{static} Color DEFAULT_FIGURE_FILL_COLOR
+-{static} Color DEFAULT_FIGURE_BORDER_COLOR
+-{static} double DEFAULT_FIGURE_BORDER_SIZE
+-{static} double MIN_FIGURE_BORDER_SIZE
+-{static} double MAX_FIGURE_BORDER_sIZE
+
+-CanvasState canvasState;
+-Canvas canvas
+-GraphicsContext gc
 
 -Color borderColor
 -Color fillColor
 -double borderSize
 
--final ToggleButton selectionButton
--final ToggleButton rectangleButton
--final ToggleButton circleButton
--final ToggleButton squareButton
--final ToggleButton ellipseButton
--final ToggleButton lineButton
--final ToggleGroup figureAndSelectionToolsGroup
--final Button deleteButton
--final Button toBottomButton
--final Button toTopButton
--final Slider borderSizeSlider
--final ColorPicker borderColorPicker
--final ColorPicker fillColorPicker
+-ToggleButton selectionButton
+-ToggleButton rectangleButton
+-ToggleButton circleButton
+-ToggleButton squareButton
+-ToggleButton ellipseButton
+-ToggleButton lineButton
+-ToggleGroup figureAndSelectionToolsGroup
+-Button deleteButton
+-Button toBottomButton
+-Button toTopButton
+-Slider borderSizeSlider
+-ColorPicker borderColorPicker
+-ColorPicker fillColorPicker
 
 -Point startPoint
--final Set<Figure> selectedFigures
--final StatusPane statusPane
+-Set<Figure> selectedFigures
+-StatusPane statusPane
 
 +PaintPane(CanvasState canvasState, StatusPane statusPane)
 +void redrawCanvas()
@@ -70,15 +76,17 @@ class PaintPane{
 -void onFillColorChanged(ObservableValue<? extends Color> observableValue, Color color, Color newValue)
 }
 
-AppLauncher -[hidden] AppMenuBar
-AppMenuBar -[hidden] MainFrame
-MainFrame -[hidden] StatusPane
+AppLauncher ..down> MainFrame
+MainFrame ..right> StatusPane
+MainFrame ..> PaintPane
+MainFrame ..left> AppMenuBar
+PaintPane ..right> CanvasPane
 
 AppLauncher -down[hidden]- PaintPane
 
 abstract class FigureTool{
--final CanvasState canvasState
--final PaintPane paintPane
+-CanvasState canvasState
+-PaintPane paintPane
 +FigureTool(CanvasState canvasState,PaintPane paintPane)
 +void createFigure(Point startPoint, Point endPoint)
 #{abstract} Figure createInstance(Point startPoint, Point endPoint)
@@ -114,7 +122,12 @@ EllipseTool -[hidden] LineTool
 LineTool -[hidden] RectangleTool
 RectangleTool -[hidden] SquareTool
 FigureTool -up[hidden]- PaintPane
+PaintPane ..> FigureTool
 
+
+note right of CanvasPane
+This class extends of Pane
+end note
 
 note top of AppLauncher
 This class extends of Application
@@ -125,17 +138,16 @@ This class extends of MenuBar
 end note
 
 note top of MainFrame
-This class extends of VBox
+This class extends of BorderPane
 end note
 
 note top of StatusPane
 This class extends of BorderPane
 end note
 
-class PaintPane
-note right: This class extends of HBox
-
-
+note left of PaintPane
+This class extends of HBox
+end note
 
 
 @enduml
