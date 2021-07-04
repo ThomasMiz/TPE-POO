@@ -9,7 +9,8 @@ public class MainFrame extends BorderPane {
         StatusPane statusPane = new StatusPane();
         PaintPane paintPane = new PaintPane(canvasState, statusPane);
         paintPane.setPrefWidth(600);
-        setTop(new AppMenuBar());
+
+        setTop(new AppMenuBar(paintPane));
         setCenter(paintPane);
         setBottom(statusPane);
     }
