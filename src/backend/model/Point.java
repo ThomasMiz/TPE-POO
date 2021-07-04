@@ -44,11 +44,10 @@ public class Point implements Movable {
     public boolean equals(Object other) {
         if(this == other)
             return true;
-        if (!(other instanceof Point o))
+        if (!(other instanceof Point ))
             return false;
-        if(Double.compare(o.x, x) != 0)
-            return false;
-        return Double.compare(o.y, y) == 0;
+        Point o = (Point) other;
+        return Double.compare(o.x, x) == 0 && Double.compare(o.y, y) == 0;
     }
 
     @Override

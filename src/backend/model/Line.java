@@ -8,7 +8,7 @@ public class Line extends Figure {
     public Line(Point from, Point to) {
         super(new Point[]{from, to});
         if (from.equals(to))
-            throw new IllegalArgumentException("Una línea no puede empezr y terminar en el mismo punto");
+            throw new IllegalArgumentException("Una línea no puede empezar y terminar en el mismo punto");
         this.from = from;
         this.to = to;
     }
