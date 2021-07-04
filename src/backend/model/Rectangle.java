@@ -60,7 +60,6 @@ public class Rectangle extends Figure {
     @Override
     public void draw(GraphicsContext gc) {
         super.draw(gc);
-        gc.setFill(getFillColor());
         gc.fillRect(topLeft.getX(), topLeft.getY(), width(), height());
         gc.strokeRect(topLeft.getX(), topLeft.getY(), width(), height());
     }

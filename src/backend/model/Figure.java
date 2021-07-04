@@ -54,7 +54,6 @@ public abstract class Figure implements Movable, Colorable, Drawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setStroke(borderColor);
         gc.setLineWidth(borderSize);
     }
 

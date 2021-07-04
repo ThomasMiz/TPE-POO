@@ -21,7 +21,8 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-	private static final int MIN_DISTANCE = 2;
+	private static final Color SELECTED_FIGURE_BORDER_COLOR = new Color(0.4, 0.4, 1, 1);
+
 	// BackEnd
 	private final CanvasState canvasState;
 
@@ -225,9 +226,9 @@ public class PaintPane extends BorderPane {
 
 	public void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(Figure figure : canvasState) {
-			//TODO if(selectedFigures.contains(figure))
-			//...
+		for (Figure figure : canvasState) {
+			gc.setStroke(selectedFigures.contains(figure) ? SELECTED_FIGURE_BORDER_COLOR : figure.getBorderColor());
+			gc.setFill(figure.getFillColor());
 			figure.draw(gc);
 		}
 	}

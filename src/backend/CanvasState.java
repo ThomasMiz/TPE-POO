@@ -33,17 +33,20 @@ public class CanvasState implements Iterable<Figure> {
         // We iterate upwards through the list, removing the figures that need to be sent to the top and
         // adding them to the toTopList list, leaving leftover space at the end of the list.
         int placeIndex = 0;
-        for (int searchIndex = 0; searchIndex <= list.size(); searchIndex++) {
+        for (int searchIndex = 0; searchIndex < list.size(); searchIndex++) {
             Figure f = list.get(searchIndex);
             if (figures.contains(f))
                 toTopList.add(f);
-            else if (searchIndex != placeIndex)
-                list.set(placeIndex++, f);
+            else {
+                if (searchIndex != placeIndex)
+                    list.set(placeIndex, f);
+                placeIndex++;
+            }
         }
 
         // At this point, there are as many free spaces at the end of the list as figures in toTopList.
         // We just need to move the figures in toTopList to these remaining spaces.
-        for(Figure f : toTopList)
+        for (Figure f : toTopList)
             list.set(placeIndex++, f);
     }
 
@@ -59,13 +62,17 @@ public class CanvasState implements Iterable<Figure> {
             Figure f = list.get(searchIndex);
             if (figures.contains(f))
                 toBottomList.add(f);
-            else if (searchIndex != placeIndex)
-                list.set(placeIndex--, f);
+            else {
+                if (searchIndex != placeIndex)
+                    list.set(placeIndex, f);
+                placeIndex--;
+            }
         }
 
         // placeIndex has not reached 0 yet, there are as many places left at the beginning of the list as
         // figures in the toBottomList. To be done, we just have to copy the leftover figures
-        for (Figure f : toBottomList) list.set(placeIndex--, f);
+        for (Figure f : toBottomList)
+            list.set(placeIndex--, f);
     }
 
     /**

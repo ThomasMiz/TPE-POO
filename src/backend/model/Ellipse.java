@@ -45,7 +45,6 @@ public class Ellipse extends Figure {
     @Override
     public void draw(GraphicsContext gc) {
         super.draw(gc);
-        gc.setFill(getFillColor());
         gc.fillOval(center.getX() - radiusX, center.getY() - radiusY, radiusX * 2, radiusY * 2);
         gc.strokeOval(center.getX() - radiusX, center.getY() - radiusY, radiusX * 2, radiusY * 2);
     }
