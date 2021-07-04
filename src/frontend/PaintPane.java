@@ -6,7 +6,6 @@ import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.tools.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -54,7 +53,7 @@ public class PaintPane extends BorderPane {
 	private final Button deleteButton = new Button("Borrar");
 	private final Button toBottomButton = new Button("Al Fondo");
 	private final Button toTopButton = new Button("Al Frente");
-	private final Slider borderSlider = new Slider(MIN_FIGURE_BORDER_SIZE, MAX_FIGURE_BORDER_sIZE, DEFAULT_FIGURE_BORDER_SIZE);
+	private final Slider borderSizeSlider = new Slider(MIN_FIGURE_BORDER_SIZE, MAX_FIGURE_BORDER_sIZE, DEFAULT_FIGURE_BORDER_SIZE);
 	private final ColorPicker borderColorPicker = new ColorPicker(DEFAULT_FIGURE_BORDER_COLOR);
 	private final ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FIGURE_FILL_COLOR);
 
@@ -71,7 +70,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		//Buttons
+		// Buttons
 		ToggleButton[] figureAndSelectionToolsArr = {selectionButton, lineButton, squareButton, rectangleButton, circleButton, ellipseButton};
 		ButtonBase[] functionalitiesToolsArr = {deleteButton, toBottomButton, toTopButton};
 
@@ -91,31 +90,33 @@ public class PaintPane extends BorderPane {
 		squareButton.setUserData(new SquareTool(canvasState, this));
 		lineButton.setUserData(new LineTool(canvasState, this));
 
-		//Interface
-		borderSlider.setShowTickMarks(true);
-		borderSlider.setShowTickLabels(true);
+		// Interface
+		borderSizeSlider.setShowTickMarks(true);
+		borderSizeSlider.setShowTickLabels(true);
 		Label borderLabel = new Label();
 		Label fillLabel = new Label();
-		borderLabel.textProperty().bind(Bindings.format("Borde:\t%.2f", borderSlider.valueProperty()));
+		borderLabel.textProperty().bind(Bindings.format("Borde:\t%.2f", borderSizeSlider.valueProperty()));
 		fillLabel.textProperty().setValue("Relleno: ");
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(figureAndSelectionToolsArr);
 		buttonsBox.getChildren().addAll(functionalitiesToolsArr);
-		buttonsBox.getChildren().addAll(borderLabel, borderSlider, borderColorPicker, fillLabel, fillColorPicker);
+		buttonsBox.getChildren().addAll(borderLabel, borderSizeSlider, borderColorPicker, fillLabel, fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		setLeft(buttonsBox);
 		setRight(canvas);
 
-		//Mouse events
+		figureAndSelectionToolsGroup.selectedToggleProperty().addListener(this::onSelectedButtonChanged);
+
+		// Mouse events
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
 		canvas.setOnMouseClicked(this::onMouseClicked);
 		canvas.setOnMouseDragged(this::onMouseDragged);
 
-		//FunctionalityButtons
+		// Functionality Buttons
 		deleteButton.setOnAction(event -> {
 			canvasState.removeFigures(selectedFigures);
 			selectedFigures.clear();
@@ -132,19 +133,54 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		borderSlider.valueProperty().addListener(this::onBorderSliderValueChanged);
+		borderSizeSlider.valueProperty().addListener(this::onBorderSliderValueChanged);
 		borderColorPicker.valueProperty().addListener(this::onBorderColorChanged);
 		fillColorPicker.valueProperty().addListener(this::onFillColorChanged);
 	}
 
-	private void onMousePressed(MouseEvent event){
+	private void onSelectedButtonChanged(ObservableValue<? extends Toggle> observableValue, Toggle value, Toggle newValue) {
+		if (value == selectionButton && newValue != selectionButton) {
+			selectedFigures.clear();
+			onSelectionChanged();
+		}
+	}
+
+	private void onSelectionChanged() {
+		if (selectedFigures.isEmpty()) {
+			fillColorPicker.setValue(fillColor);
+			borderColorPicker.setValue(borderColor);
+			borderSizeSlider.setValue(borderSize);
+		} else {
+			Iterator<Figure> iter = selectedFigures.iterator();
+			Figure f = iter.next();
+			Color fc = f.getFillColor();
+			Color bc = f.getBorderColor();
+			double bs = f.getBorderSize();
+
+			// We go through all the figures and check if they all share the same value in any property.
+			while ((fc != null || bc != null || bs >= 0) && iter.hasNext()) {
+				f = iter.next();
+				if (fc != null && !fc.equals(f.getFillColor())) fc = null;
+				if (bc != null && !bc.equals(f.getBorderColor())) bc = null;
+				if (bs >= 0 && bs != f.getBorderSize()) bs = -1;
+			}
+
+			if (bs >= 0) borderSizeSlider.setValue(bs);
+			fillColorPicker.setValue(fc);
+			borderColorPicker.setValue(bc);
+		}
+
+		redrawCanvas();
+	}
+
+	private void onMousePressed(MouseEvent event) {
 		startPoint = new Point(event.getX(), event.getY());
 	}
 
 	private void onMouseRelease(MouseEvent event) {
 		//If any figure creation button is selected then the figure will be drawn after releasing the mouse
 		Toggle selectedFigureButton = figureAndSelectionToolsGroup.getSelectedToggle();
-		if(selectedFigureButton != null && !selectionButton.isSelected()) {
+		if (selectedFigureButton != null && !selectionButton.isSelected()) {
 			((FigureTool) selectedFigureButton.getUserData()).createFigure(startPoint, new Point(event.getX(), event.getY()));
 		}
 		//startPoint = null;
@@ -162,15 +198,18 @@ public class PaintPane extends BorderPane {
 			selectedFigures.clear();
 			if (startPoint.distanceTo(clickedPoint) != 0) {
 				try {
-					int countSelected = 0;
 					Rectangle container = Rectangle.from(startPoint, clickedPoint);
-					for (Figure figure : canvasState) {
-						if (figure.isContainedIn(container)) {
-							selectedFigures.add(figure);
-							countSelected++;
-						}
-					}
-					statusPane.updateStatus(countSelected > 0 ? String.format("Se seleccionaron %d figuras", countSelected) : "No se encontraron figuras");
+					canvasState.getFiguresOnRectangle(container, selectedFigures);
+
+					String status;
+					if (selectedFigures.isEmpty())
+						status = "No se encontraron figuras en el area";
+					else if(selectedFigures.size() == 1)
+						status = String.format("Se seleccionó %s", selectedFigures.iterator().next());
+					else
+						status = String.format("Se seleccionaron %d figuras", selectedFigures.size());
+					statusPane.updateStatus(status);
+
 				} catch (Exception e) {
 					statusPane.updateStatus(e.getMessage());
 				}
@@ -181,45 +220,60 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
 				}
 			}
-			redrawCanvas();
+
+			onSelectionChanged();
 		}
+
 		startPoint = null;
 	}
 
 	private void onMouseDragged(MouseEvent event) {
-		if(selectionButton.isSelected() && !selectedFigures.isEmpty()) {
-			Point eventPoint = new Point(event.getX(), event.getY());
-			double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-			double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-			for(Figure figure : selectedFigures) {
-				figure.move(diffX,diffY);
-			}
+		if (selectionButton.isSelected() && !selectedFigures.isEmpty()) {
+			double diffX = (event.getX() - startPoint.getX()) / 100;
+			double diffY = (event.getY() - startPoint.getY()) / 100;
+			for (Figure figure : selectedFigures)
+				figure.move(diffX, diffY);
 			redrawCanvas();
-		}
-		else{
+		} else {
 			selectedFigures.clear();
 		}
 	}
 
 	private void onBorderSliderValueChanged(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-		for(Figure figure : selectedFigures) {
-			figure.setBorderSize(newValue.doubleValue());
+		if (selectedFigures.isEmpty())
+			borderSize = newValue.doubleValue();
+		else {
+			double val = newValue.doubleValue();
+			for (Figure figure : selectedFigures)
+				figure.setBorderSize(val);
+			redrawCanvas();
 		}
-		redrawCanvas();
 	}
 
 	private void onBorderColorChanged(ObservableValue<? extends Color> observableValue, Color color, Color newValue) {
-		for(Figure figure : selectedFigures) {
-			figure.setBorderColor(newValue);
+		if (newValue == null)
+			return;
+
+		if (selectedFigures.isEmpty()) {
+			borderColor = newValue;
+		} else {
+			for (Figure figure : selectedFigures)
+				figure.setBorderColor(newValue);
+			redrawCanvas();
 		}
-		redrawCanvas();
 	}
 
 	private void onFillColorChanged(ObservableValue<? extends Color> observableValue, Color color, Color newValue) {
-		for(Figure figure : selectedFigures) {
-			figure.setFillColor(newValue);
+		if (newValue == null)
+			return;
+
+		if (selectedFigures.isEmpty()) {
+			fillColor = newValue;
+		} else {
+			for (Figure figure : selectedFigures)
+				figure.setFillColor(newValue);
+			redrawCanvas();
 		}
-		redrawCanvas();
 	}
 
 	public void redrawCanvas() {
