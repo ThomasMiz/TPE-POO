@@ -6,7 +6,7 @@ import backend.model.Figure;
 import backend.model.Point;
 import frontend.PaintPane;
 
-public class EllipseTool extends FigureTool{
+public class EllipseTool extends FigureTool {
     public EllipseTool(CanvasState canvasState, PaintPane paintPane) {
         super(canvasState, paintPane);
     }
@@ -18,5 +18,4 @@ public class EllipseTool extends FigureTool{
         double radiusY = Math.abs(endPoint.getY() - center.getY());
         return new Ellipse(center, radiusX, radiusY);
     }
-
 }

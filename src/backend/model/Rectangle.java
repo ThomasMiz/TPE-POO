@@ -12,12 +12,12 @@ public class Rectangle extends Figure {
         if (topLeft.getX() == bottomRight.getX())
             throw new IllegalArgumentException("A Rectangle's width must be greater than 0");
         if (topLeft.getY() == bottomRight.getY())
-            throw new IllegalArgumentException("A Rectangle's heigh must be greater than 0");
-
+            throw new IllegalArgumentException("A Rectangle's height must be greater than 0");
         if (topLeft.getX() > bottomRight.getX())
             throw new IllegalArgumentException("topLeft must be on the left of bottomRight");
         if (topLeft.getY() > bottomRight.getY())
             throw new IllegalArgumentException("topLeft must be above bottomRight");
+
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }

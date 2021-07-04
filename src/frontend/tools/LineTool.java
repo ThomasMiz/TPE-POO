@@ -6,7 +6,7 @@ import backend.model.Line;
 import backend.model.Point;
 import frontend.PaintPane;
 
-public class LineTool extends FigureTool{
+public class LineTool extends FigureTool {
 
     public LineTool(CanvasState canvasState, PaintPane paintPane) {
         super(canvasState, paintPane);
@@ -16,5 +16,4 @@ public class LineTool extends FigureTool{
     public Figure createInstance(Point startPoint, Point endPoint) {
         return new Line(startPoint, endPoint);
     }
-
 }
