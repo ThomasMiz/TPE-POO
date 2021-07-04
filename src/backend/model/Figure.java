@@ -19,7 +19,7 @@ public abstract class Figure implements Movable, Colorable, Drawable {
     }
 
     public void setBorderSize(double borderSize) {
-        if (borderSize < 0) throw new IllegalArgumentException("borderSize");
+        if (borderSize < 0) throw new IllegalArgumentException("El tamaño de un borde debe ser mayor o igual a 0");
         this.borderSize = borderSize;
     }
 

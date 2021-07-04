@@ -41,6 +41,6 @@ public class Line extends Figure {
 
     @Override
     public String toString() {
-        return String.format("Linea [Desde: %s, Hasta: %s]", from, to);
+        return String.format("Linea [ %s, %s ]", from, to);
     }
 }

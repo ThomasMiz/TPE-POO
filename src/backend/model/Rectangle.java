@@ -10,9 +10,9 @@ public class Rectangle extends Figure {
         super(new Point[]{topLeft, bottomRight});
 
         if (topLeft.getX() == bottomRight.getX())
-            throw new IllegalArgumentException("A Rectangle's width must be greater than 0");
+            throw new IllegalArgumentException("El ancho de un rectángulo debe ser mayor que 0");
         if (topLeft.getY() == bottomRight.getY())
-            throw new IllegalArgumentException("A Rectangle's height must be greater than 0");
+            throw new IllegalArgumentException("El alto de un rectángulo debe ser mayor que 0");
         if (topLeft.getX() > bottomRight.getX())
             throw new IllegalArgumentException("topLeft must be on the left of bottomRight");
         if (topLeft.getY() > bottomRight.getY())

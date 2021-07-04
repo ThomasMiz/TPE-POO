@@ -9,7 +9,7 @@ public class Ellipse extends Figure {
     public Ellipse(Point center, double radiusX, double radiusY) {
         super(new Point[]{center});
         if (radiusX <= 0 && radiusY <= 0)
-            throw new IllegalArgumentException("Radiuses must be greater than 0");
+            throw new IllegalArgumentException("Los radios deben ser mayores a 0");
         this.center = center;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
