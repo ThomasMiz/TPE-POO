@@ -16,7 +16,9 @@ public class AppLauncher extends Application {
 		CanvasState canvasState = new CanvasState(); // BackEnd
 		MainFrame frame = new MainFrame(canvasState);
 		Scene scene = new Scene(frame);
-		primaryStage.setResizable(false);
+		primaryStage.setMinWidth(800);
+		primaryStage.setMinHeight(700);
+		primaryStage.setResizable(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setOnCloseRequest(event -> System.exit(0));

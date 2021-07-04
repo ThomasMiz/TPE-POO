@@ -6,6 +6,7 @@ import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.tools.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -13,13 +14,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.util.*;
 
-public class PaintPane extends BorderPane {
+public class PaintPane extends HBox{
 
 	private static final Color SELECTED_FIGURE_BORDER_COLOR = new Color(1, 0, 0, 1);
 
@@ -34,8 +35,8 @@ public class PaintPane extends BorderPane {
 	private final CanvasState canvasState;
 
 	// Canvas y relacionados
-	private final Canvas canvas = new Canvas(800, 600);
-	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Canvas canvas;
+	private final GraphicsContext gc;
 
 	// Propiedades de figuras seleccionadas (aplicadas a figuras nuevas)
 	private Color borderColor = DEFAULT_FIGURE_BORDER_COLOR;
@@ -69,6 +70,9 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+		CanvasPane canvasPane = new CanvasPane(600,800);
+		this.canvas = canvasPane.getCanvas();
+		this.gc = canvas.getGraphicsContext2D();
 
 		// Buttons
 		ToggleButton[] figureAndSelectionToolsArr = {selectionButton, lineButton, squareButton, rectangleButton, circleButton, ellipseButton};
@@ -104,10 +108,16 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		setLeft(buttonsBox);
-		setRight(canvas);
+
+		canvasPane.prefHeightProperty().bind(this.heightProperty());
+		canvasPane.prefWidthProperty().bind(this.widthProperty());
+
+		getChildren().addAll(buttonsBox, canvasPane);
 
 		figureAndSelectionToolsGroup.selectedToggleProperty().addListener(this::onSelectedButtonChanged);
+
+		canvasPane.widthProperty().addListener(this::onWindowSizeChanged);
+		canvasPane.heightProperty().addListener(this::onWindowSizeChanged);
 
 		// Mouse events
 		canvas.setOnMousePressed(this::onMousePressed);
@@ -136,6 +146,10 @@ public class PaintPane extends BorderPane {
 		borderSizeSlider.valueProperty().addListener(this::onBorderSliderValueChanged);
 		borderColorPicker.valueProperty().addListener(this::onBorderColorChanged);
 		fillColorPicker.valueProperty().addListener(this::onFillColorChanged);
+	}
+
+	private void onWindowSizeChanged(ObservableValue<? extends Number> observableValue, Number number, Number t1){
+		redrawCanvas();
 	}
 
 	private void onSelectedButtonChanged(ObservableValue<? extends Toggle> observableValue, Toggle value, Toggle newValue) {
@@ -183,13 +197,14 @@ public class PaintPane extends BorderPane {
 		if (selectedFigureButton != null && !selectionButton.isSelected()) {
 			((FigureTool) selectedFigureButton.getUserData()).createFigure(startPoint, new Point(event.getX(), event.getY()));
 		}
-		//startPoint = null;
 	}
 
 	private void onMouseMoved(MouseEvent event) {
-		Point eventPoint = new Point(event.getX(), event.getY());
-		Figure topFigure = canvasState.getFigureAt(eventPoint); // Only the information from the front figure is displayed
-		statusPane.updateStatus(topFigure == null ? eventPoint.toString() : topFigure.toString());
+		if(selectedFigures.isEmpty()) {
+			Point eventPoint = new Point(event.getX(), event.getY());
+			Figure topFigure = canvasState.getFigureAt(eventPoint); // Only the information from the front figure is displayed
+			statusPane.updateStatus(topFigure == null ? eventPoint.toString() : topFigure.toString());
+		}
 	}
 
 	private void onMouseClicked(MouseEvent event) {
