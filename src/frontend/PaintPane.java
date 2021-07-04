@@ -123,14 +123,13 @@ public class PaintPane extends HBox{
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
-		canvas.setOnMouseClicked(this::onMouseClicked);
 		canvas.setOnMouseDragged(this::onMouseDragged);
 
 		// Functionality Buttons
 		deleteButton.setOnAction(event -> {
 			canvasState.removeFigures(selectedFigures);
 			selectedFigures.clear();
-			redrawCanvas();
+			onSelectionChanged();
 		});
 
 		toTopButton.setOnAction(event -> {
@@ -153,7 +152,7 @@ public class PaintPane extends HBox{
 	}
 
 	private void onSelectedButtonChanged(ObservableValue<? extends Toggle> observableValue, Toggle value, Toggle newValue) {
-		if (value == selectionButton && newValue != selectionButton) {
+		if (value == selectionButton && newValue != selectionButton && !selectedFigures.isEmpty()) {
 			selectedFigures.clear();
 			onSelectionChanged();
 		}
@@ -193,9 +192,45 @@ public class PaintPane extends HBox{
 
 	private void onMouseRelease(MouseEvent event) {
 		//If any figure creation button is selected then the figure will be drawn after releasing the mouse
-		Toggle selectedFigureButton = figureAndSelectionToolsGroup.getSelectedToggle();
-		if (selectedFigureButton != null && !selectionButton.isSelected()) {
-			((FigureTool) selectedFigureButton.getUserData()).createFigure(startPoint, new Point(event.getX(), event.getY()));
+		Toggle selectedButton = figureAndSelectionToolsGroup.getSelectedToggle();
+
+		if (selectedButton == null)
+			return;
+
+		Point releasePoint = new Point(event.getX(), event.getY());
+		if (selectedButton == selectionButton) {
+			selectedFigures.clear();
+			if (startPoint.distanceSquaredTo(releasePoint) > 1) {
+				try {
+					Rectangle container = Rectangle.from(startPoint, releasePoint);
+					canvasState.getFiguresOnRectangle(container, selectedFigures);
+
+					String status;
+					if (selectedFigures.isEmpty())
+						status = "No se encontraron figuras en el area";
+					else if (selectedFigures.size() == 1)
+						status = String.format("Se seleccionó %s", selectedFigures.iterator().next());
+					else
+						status = String.format("Se seleccionaron %d figuras", selectedFigures.size());
+					statusPane.updateStatus(status);
+
+				} catch (Exception e) {
+					statusPane.updateStatus(e.getMessage());
+				}
+			} else {
+				Figure topFigure = canvasState.getFigureAt(releasePoint);
+				if (topFigure != null) {
+					selectedFigures.add(topFigure);
+					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
+				}
+			}
+
+			onSelectionChanged();
+		} else {
+			Object buttonData = selectedButton.getUserData();
+			if (buttonData instanceof FigureTool) {
+				((FigureTool) buttonData).createFigure(startPoint, releasePoint);
+			}
 		}
 	}
 
@@ -207,50 +242,14 @@ public class PaintPane extends HBox{
 		}
 	}
 
-	private void onMouseClicked(MouseEvent event) {
-		if (selectionButton.isSelected()) {
-			Point clickedPoint = new Point(event.getX(), event.getY());
-			selectedFigures.clear();
-			if (startPoint.distanceTo(clickedPoint) != 0) {
-				try {
-					Rectangle container = Rectangle.from(startPoint, clickedPoint);
-					canvasState.getFiguresOnRectangle(container, selectedFigures);
-
-					String status;
-					if (selectedFigures.isEmpty())
-						status = "No se encontraron figuras en el area";
-					else if(selectedFigures.size() == 1)
-						status = String.format("Se seleccionó %s", selectedFigures.iterator().next());
-					else
-						status = String.format("Se seleccionaron %d figuras", selectedFigures.size());
-					statusPane.updateStatus(status);
-
-				} catch (Exception e) {
-					statusPane.updateStatus(e.getMessage());
-				}
-			} else {
-				Figure topFigure = canvasState.getFigureAt(clickedPoint);
-				if (topFigure != null) {
-					selectedFigures.add(topFigure);
-					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
-				}
-			}
-
-			onSelectionChanged();
-		}
-
-		startPoint = null;
-	}
-
 	private void onMouseDragged(MouseEvent event) {
-		if (selectionButton.isSelected() && !selectedFigures.isEmpty()) {
-			double diffX = (event.getX() - startPoint.getX()) / 100;
-			double diffY = (event.getY() - startPoint.getY()) / 100;
+		if (!selectedFigures.isEmpty()) {
+			double diffX = event.getX() - startPoint.getX();
+			double diffY = event.getY() - startPoint.getY();
 			for (Figure figure : selectedFigures)
 				figure.move(diffX, diffY);
 			redrawCanvas();
-		} else {
-			selectedFigures.clear();
+			startPoint.move(diffX, diffY);
 		}
 	}
 

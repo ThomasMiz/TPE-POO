@@ -41,6 +41,14 @@ public class Point implements Movable {
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Point))
+            return false;
+        Point o = (Point)other;
+        return x == o.x && y == o.y;
+    }
+
+    @Override
     public String toString() {
         return String.format("{%.2f , %.2f}", x, y);
     }
