@@ -1,0 +1,141 @@
+@startuml
+
+interface Drawable{
++void draw(GraphicsContext gc)
+}
+
+interface Colorable{
++void setBorderSize(double size)
++void setBorderColor(Color color)
++void setFillColor(Color color)
++default void setColorableProperties(double borderSize, Color borderColor, Color fillColor)
+}
+
+interface Movable{
++void move(double deltaX, double deltaY)
+}
+
+Drawable -[hidden] Colorable
+Colorable -[hidden] Movable
+
+abstract class Figure{
+-final Point[] points
+-double borderSize
+-Color borderColor
+-Color fillColor
+
+#Figure(Point[] points)
++void setBorderSize(double borderSize)
++double getBorderSize()
++void setBorderColor(Color borderColor)
++Color getBorderColor()
++void setFillColor(Color fillColor)
++Color getFillColor()
+}
+class Figure implements Drawable
+class Figure implements Colorable
+class Figure implements Movable
+Figure *-up- Point
+
+class CanvasState{
+-final List<Figure> list
++void addFigure(Figure figure)
++boolean removeFigures(Collection<Figure> figures)
++void sendToTop(Collection<Figure> figures)
++void sendToBottom(Collection<Figure> figures)
++Figure getFigureAt(Point point)
++int getFiguresOnRectangle(Rectangle rectangle, Collection<Figure> result)
++Iterator<Figure> iterator()
++Iterator<Figure> ascendingDepthIterator()
+}
+
+CanvasState *-- Figure
+
+class ListInvertedIterator<T>{
+-final List<T> list
+-int index
+
++ListInvertedIterator(List<T> list)
++boolean hasNext()
++T next()
+}
+
+CanvasState +--  ListInvertedIterator
+
+class Circle{
++Circle(Point center, double radius)
++double getRadius()
++String toString()
+}
+
+class Ellipse{
+-final Point center
+-final double radiusX
+-final double radiusY
+
++Ellipse(Point center, double radiusX, double radiusY)
++Point getCenter()
++double getRadiusX()
++double getRadiusY()
++boolean contains(Point point)
++boolean isContainedIn(Rectangle rectangle)
++void draw(GraphicsContext gc)
++String toString()
+}
+
+class Line{
+-final Point from
+-final Point to
+
++Line(Point from, Point to)
++Point getFrom()
++Point getTo()
++boolean contains(Point point)
++boolean isContainedIn(Rectangle rectangle)
++void draw(GraphicsContext gc)
++String toString()
+}
+
+class Point{
+-double x
+-double y
+
++double distanceSquaredTo(Point other)
++double distanceTo(Point other)
++void move(double deltaX, double deltaY)
++String toString()
+}
+
+class Point implements Movable
+
+class Rectangle{
+-final Point topLeft
+-final Point bottomRight
+
++Rectangle(Point topLeft, Point bottomRight)
++Point getTopLeft()
++Point getBottomRight()
++double width()
++double height()
++boolean contains(Point point)
++boolean contains(Rectangle other)
++boolean isContainedIn(Rectangle rectangle)
++void draw(GraphicsContext gc)
++String toString()
+}
+
+class Square{
++Square(Point topLeft, Point bottomRight)
++String toString()
+}
+
+class Circle extends Figure
+class Ellipse extends Figure
+class Rectangle extends Figure
+class Square extends Figure
+class Line extends Figure
+
+note top of CanvasState
+This class implements of Iterable<T>
+end note
+@enduml

@@ -1,0 +1,140 @@
+@startuml
+
+class AppLauncher{
++{static} void main(String[] args)
++void start(Stage primaryStage)
+}
+
+class AppMenuBar{
++AppMenuBar()
+}
+
+class MainFrame{
++MainFrame(CanvasState canvasState)
+}
+
+class StatusPane{
+-final Label statusLabel
++StatusPane()
++void updateStatus(String text)
+}
+
+class PaintPane{
+-{static} final Color SELECTED_FIGURE_BORDER_COLOR
+-{static} final Color DEFAULT_FIGURE_FILL_COLOR
+-{static} final Color DEFAULT_FIGURE_BORDER_COLOR
+-{static} final double DEFAULT_FIGURE_BORDER_SIZE
+-{static} final double MIN_FIGURE_BORDER_SIZE
+-{static} final double MAX_FIGURE_BORDER_sIZE
+
+-final CanvasState canvasState;
+-final Canvas canvas
+-final GraphicsContext gc
+
+-Color borderColor
+-Color fillColor
+-double borderSize
+
+-final ToggleButton selectionButton
+-final ToggleButton rectangleButton
+-final ToggleButton circleButton
+-final ToggleButton squareButton
+-final ToggleButton ellipseButton
+-final ToggleButton lineButton
+-final ToggleGroup figureAndSelectionToolsGroup
+-final Button deleteButton
+-final Button toBottomButton
+-final Button toTopButton
+-final Slider borderSlider
+-final ColorPicker borderColorPicker
+-final ColorPicker fillColorPicker
+
+-Point startPoint
+-final Set<Figure> selectedFigures
+-final StatusPane statusPane
+
++PaintPane(CanvasState canvasState, StatusPane statusPane)
++void redrawCanvas()
++Color getFillColor()
++Color getBorderColor()
++double getBorderSize()
++StatusPane getStatusPane()
+-void onMousePressed(MouseEvent event)
+-void onMouseRelease(MouseEvent event)
+-void onMouseMoved(MouseEvent event)
+-void onMouseClicked(MouseEvent event)
+-void onMouseDragged(MouseEvent event)
+-void onBorderSliderValueChanged(ObservableValue<? extends Number> observableValue, Number number, Number newValue)
+-void onBorderColorChanged(ObservableValue<? extends Color> observableValue, Color color, Color newValue)
+-void onFillColorChanged(ObservableValue<? extends Color> observableValue, Color color, Color newValue)
+}
+
+AppLauncher -[hidden] AppMenuBar
+AppMenuBar -[hidden] MainFrame
+MainFrame -[hidden] StatusPane
+
+AppLauncher -down[hidden]- PaintPane
+
+abstract class FigureTool{
+-final CanvasState canvasState
+-final PaintPane paintPane
++FigureTool(CanvasState canvasState,PaintPane paintPane)
++void createFigure(Point startPoint, Point endPoint)
+#{abstract} Figure createInstance(Point startPoint, Point endPoint)
+}
+
+class CircleTool extends FigureTool{
++CircleTool(CanvasState canvasState, PaintPane paintPane)
++Figure createInstance(Point startPoint, Point endPoint)
+}
+
+class EllipseTool extends FigureTool{
++EllipseTool(CanvasState canvasState, PaintPane paintPane)
++Figure createInstance(Point startPoint, Point endPoint)
+}
+
+class LineTool extends FigureTool{
++LineTool(CanvasState canvasState, PaintPane paintPane)
++Figure createInstance(Point startPoint, Point endPoint)
+}
+
+class RectangleTool extends FigureTool{
++RectangleTool(CanvasState canvasState, PaintPane paintPane)
++Figure createInstance(Point startPoint, Point endPoint)
+}
+
+class SquareTool extends FigureTool{
++SquareTool(CanvasState canvasState, PaintPane paintPane)
++Figure createInstance(Point startPoint, Point endPoint)
+}
+
+CircleTool -[hidden] EllipseTool
+EllipseTool -[hidden] LineTool
+LineTool -[hidden] RectangleTool
+RectangleTool -[hidden] SquareTool
+FigureTool -up[hidden]- PaintPane
+
+
+note top of AppLauncher
+This class extends of Application
+end note
+
+note top of AppMenuBar
+This class extends of MenuBar
+end note
+
+note top of MainFrame
+This class extends of VBox
+end note
+
+note top of StatusPane
+This class extends of BorderPane
+end note
+
+class PaintPane
+note right: This class extends of BorderPane
+
+
+
+
+@enduml
