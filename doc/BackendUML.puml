@@ -31,10 +31,15 @@ abstract class Figure{
 +Color getBorderColor()
 +void setFillColor(Color fillColor)
 +Color getFillColor()
++void move(double deltaX, double deltaY)
++void draw(GraphicsContext gc)
+{abstract}+boolean contains(Point point)
+{abstract}+boolean isContainedIn(Rectangle rectangle)
 }
-class Figure implements Drawable
-class Figure implements Colorable
-class Figure implements Movable
+Figure .up.|> Drawable
+Figure .up.|> Colorable
+Figure .up.|> Movable
+
 Figure *-up- Point
 
 class CanvasState{
