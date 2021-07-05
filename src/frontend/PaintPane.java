@@ -59,6 +59,7 @@ public class PaintPane extends HBox {
 
 	// Last startPoint after mouse pressed
 	private Point startPoint;
+	private boolean isMovingFigures;
 
 	// Collection of selected figures
 	private final Set<Figure> selectedFigures = new HashSet<>();
@@ -187,13 +188,17 @@ public class PaintPane extends HBox {
 
 	private void onMousePressed(MouseEvent event) {
 		startPoint = new Point(event.getX(), event.getY());
+		isMovingFigures = false;
 	}
 
 	private void onMouseRelease(MouseEvent event) {
 		//If any figure creation button is selected then the figure will be drawn after releasing the mouse
 		Toggle selectedButton = figureAndSelectionToolsGroup.getSelectedToggle();
 
-		if (selectedButton == null)
+		boolean wasMovingFigures = isMovingFigures;
+		isMovingFigures = false;
+
+		if (selectedButton == null || wasMovingFigures)
 			return;
 
 		Point releasePoint = new Point(event.getX(), event.getY());
@@ -245,6 +250,7 @@ public class PaintPane extends HBox {
 				figure.move(diffX, diffY);
 			redrawCanvas();
 			startPoint.move(diffX, diffY);
+			isMovingFigures = true;
 		}
 	}
 
