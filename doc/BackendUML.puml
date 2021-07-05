@@ -119,13 +119,13 @@ class Square{
 +String toString()
 }
 
-class Circle extends Figure
+class Circle extends Ellipse
 class Ellipse extends Figure
 class Rectangle extends Figure
-class Square extends Figure
+class Square extends Rectangle
 class Line extends Figure
 
 note top of CanvasState
-This class implements of Iterable<Figure>
+This class implements Iterable<Figure>
 end note
 @enduml
